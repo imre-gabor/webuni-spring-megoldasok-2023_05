@@ -1,4 +1,4 @@
-package hu.webuni.hr.minta.web;
+package com.cubixedu.hr.sample.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,6 +30,7 @@ public class EmployeeControllerIT {
 		List<EmployeeDto> employeesBefore = getAllEmployees();
 
 		EmployeeDto newEmployee = new EmployeeDto(0L, "ABC", "student", 200000, LocalDateTime.of(2019, 01, 01, 8, 0, 0));
+		
 		saveEmployee(newEmployee)
 		.expectStatus()
 		.isOk();
@@ -91,6 +92,7 @@ public class EmployeeControllerIT {
 				.getResponseBody();
 		
 		List<EmployeeDto> employeesBefore = getAllEmployees();
+		
 		EmployeeDto invalidEmployee = newInvalidEmployee();
 		invalidEmployee.setId(savedEmployee.getId());
 		modifyEmployee(invalidEmployee).expectStatus().isBadRequest();
