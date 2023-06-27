@@ -105,9 +105,8 @@ public class CompanyController {
 	@PostMapping("/{id}/employees")
 	public CompanyDto addNewEmployee(@PathVariable long id, @RequestBody EmployeeDto employeeDto) {
 		return null;
-//		CompanyDto company = getCompanyOrThrow(id);
-//		company.getEmployees().add(employeeDto);
-//		return company;
+//		Company company = companyService.addEmployee(id, companyMapper.dtoToEmployee(employeeDto));
+//		return companyMapper.companyToDto(company);
 	}
 
 	private CompanyDto getCompanyOrThrow(long id) {
@@ -122,17 +121,15 @@ public class CompanyController {
 	@DeleteMapping("/{id}/employees/{employeeId}")
 	public CompanyDto deleteEmployeeFromCompany(@PathVariable long id, @PathVariable long employeeId) {
 		return null;
-//		CompanyDto company = getCompanyOrThrow(id);
-//		company.getEmployees().removeIf(emp -> emp.getId() == employeeId);
-//		return company;
+//		Company company = companyService.deleteEmployee(id, employeeId);
+//		return companyMapper.companyToDto(company);
 	}
 	
 	@PutMapping("/{id}/employees")
 	public CompanyDto replaceAllEmployees(@PathVariable long id, @RequestBody List<EmployeeDto> employees) {
-		return null;
-//		CompanyDto company = getCompanyOrThrow(id);
-//		company.setEmployees(employees);
-//		return company;
+		return null;		
+//		Company company = companyService.replaceEmployees(id, companyMapper.dtosToEmployees(newEmployees));
+//		return companyMapper.companyToDto(company);
 	}
 
 	
