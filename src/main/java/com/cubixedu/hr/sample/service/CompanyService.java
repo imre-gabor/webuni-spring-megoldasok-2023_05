@@ -75,8 +75,9 @@ public class CompanyService {
 		});
 		company.getEmployees().clear();
 		employees.forEach( e -> {
+			company.addEmployee(e);
 			Employee savedEmployee = employeeRepository.save(e);
-			company.addEmployee(savedEmployee);
+			e.setEmployeeId(savedEmployee.getEmployeeId());
 		});
 		return company;
 	}
