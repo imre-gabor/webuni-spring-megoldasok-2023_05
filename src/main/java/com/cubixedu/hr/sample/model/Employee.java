@@ -15,25 +15,28 @@ public class Employee {
 	@GeneratedValue
 	private Long employeeId;
 	private String name;
-	private String jobTitle;
+//	private String jobTitle;
 	private int salary;
 	private LocalDateTime dateOfStartWork;
 	
 	@ManyToOne
 	private Company company;
 	
+	@ManyToOne
+	private Position position;
+	
 
 	public Employee() {
 	}
 
-	public Employee(String name, String jobTitle, int salary, LocalDateTime dateOfStartWork) {
-		this(null, name, jobTitle, salary, dateOfStartWork);
+	public Employee(String name, Position position, int salary, LocalDateTime dateOfStartWork) {
+		this(null, name, position, salary, dateOfStartWork);
 	}
 	
-	public Employee(Long employeeId, String name, String jobTitle, int salary, LocalDateTime dateOfStartWork) {
+	public Employee(Long employeeId, String name, Position position, int salary, LocalDateTime dateOfStartWork) {
 		this.employeeId = employeeId;
 		this.name = name;
-		this.jobTitle = jobTitle;
+		this.position = position;
 		this.salary = salary;
 		this.dateOfStartWork = dateOfStartWork;
 	}
@@ -60,13 +63,6 @@ public class Employee {
 		this.name = name;
 	}
 
-	public String getJobTitle() {
-		return jobTitle;
-	}
-
-	public void setJobTitle(String jobTitle) {
-		this.jobTitle = jobTitle;
-	}
 
 	public int getSalary() {
 		return salary;
@@ -107,5 +103,13 @@ public class Employee {
 			return false;
 		Employee other = (Employee) obj;
 		return Objects.equals(employeeId, other.employeeId);
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 }

@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,10 +46,17 @@ public class EmployeeController {
 
 	// 1. megoldás
 	@GetMapping
-	public List<EmployeeDto> findEmployees(@RequestParam Optional<Integer> minSalary) {
+	public List<EmployeeDto> findEmployees(@RequestParam Optional<Integer> minSalary, @SortDefault("employeeId") Pageable pageable) {
 		List<Employee> employees = null;
 		if (minSalary.isPresent()) {
-			employees = employeeRepository.findBySalaryGreaterThan(minSalary.get());
+			Page<Employee> pageOfEmployees = employeeRepository.findBySalaryGreaterThan(minSalary.get(), pageable);
+			System.out.println(pageOfEmployees.getTotalPages());
+			System.out.println(pageOfEmployees.getTotalElements());
+			System.out.println(pageOfEmployees.isFirst());
+			System.out.println(pageOfEmployees.isLast());
+			System.out.println(pageOfEmployees.hasNext());
+			System.out.println(pageOfEmployees.hasPrevious());
+			employees = pageOfEmployees.getContent();
 		} else {
 			employees = employeeService.findAll();
 		}
