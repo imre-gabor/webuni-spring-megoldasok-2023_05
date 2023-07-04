@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +20,9 @@ import com.cubixedu.hr.sample.dto.CompanyDto;
 import com.cubixedu.hr.sample.dto.EmployeeDto;
 import com.cubixedu.hr.sample.mapper.CompanyMapper;
 import com.cubixedu.hr.sample.mapper.EmployeeMapper;
+import com.cubixedu.hr.sample.model.AverageSalaryByPosition;
 import com.cubixedu.hr.sample.model.Company;
+import com.cubixedu.hr.sample.repository.CompanyRepository;
 import com.cubixedu.hr.sample.service.CompanyService;
 
 @RestController
@@ -36,14 +37,16 @@ public class CompanyController {
 	
 	@Autowired
 	EmployeeMapper employeeMapper;
+	
+	@Autowired
+	CompanyRepository companyRepository;
+	
 
 	// 1. megoldás
 	@GetMapping
 	public List<CompanyDto> findAll(@RequestParam Optional<Boolean> full) {
 		List<Company> companies = companyService.findAll();
-		return full.orElse(false) 
-				? companyMapper.companiesToDtos(companies)
-				: companyMapper.companySummariesToDtos(companies);
+		return mapCompanies(companies, full);
 	}
 
 	// 2. megoldás
@@ -101,14 +104,14 @@ public class CompanyController {
 		return companyMapper.companyToDto(company);
 	}
 
-	private CompanyDto getCompanyOrThrow(long id) {
-		return null;
+//	private CompanyDto getCompanyOrThrow(long id) {
+//		return null;
 //		CompanyDto company = companies.get(id);
 //		if (company == null) {
 //			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 //		}
 //		return company;
-	}
+//	}
 
 	@DeleteMapping("/{id}/employees/{employeeId}")
 	public CompanyDto deleteEmployeeFromCompany(@PathVariable long id, @PathVariable long employeeId) {
@@ -120,6 +123,32 @@ public class CompanyController {
 	public CompanyDto replaceAllEmployees(@PathVariable long id, @RequestBody List<EmployeeDto> newEmployees) {
 		Company company = companyService.replaceEmployees(id, employeeMapper.dtosToEmployees(newEmployees));
 		return companyMapper.companyToDto(company);
+	}
+
+	@GetMapping(params = "aboveSalary")
+	public List<CompanyDto> getCompaniesAboveSalary(@RequestParam int aboveSalary,
+			@RequestParam Optional<Boolean> full) {
+		List<Company> filteredCompanies = companyRepository.findByEmployeeWithSalaryHigherThan(aboveSalary);
+		return mapCompanies(filteredCompanies, full);
+	}
+
+	@GetMapping(params = "aboveEmployeeCount")
+	public List<CompanyDto> getCompaniesAboveEmployeeCount(@RequestParam int aboveEmployeeCount,
+			@RequestParam Optional<Boolean> full) {
+		List<Company> filteredCompanies = companyRepository.findByEmployeeCountHigherThan(aboveEmployeeCount);
+		return mapCompanies(filteredCompanies, full);
+	}
+
+	@GetMapping("/{id}/salaryStats")
+	public List<AverageSalaryByPosition> getSalaryStatsById(@PathVariable long id) {
+		return companyRepository.findAverageSalariesByPosition(id);
+	}
+	
+
+	private List<CompanyDto> mapCompanies(List<Company> companies, Optional<Boolean> full) {
+		return full.orElse(false) 
+				? companyMapper.companiesToDtos(companies)
+				: companyMapper.companySummariesToDtos(companies);
 	}
 
 }
