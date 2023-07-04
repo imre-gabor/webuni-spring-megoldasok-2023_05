@@ -1,4 +1,4 @@
-package hu.webuni.hr.minta;
+package com.cubixedu.hr.sample;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
